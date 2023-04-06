@@ -1,3 +1,4 @@
+import streamlit as st
 import pandas as pd
 import requests
 import pandas as pd
@@ -5,8 +6,8 @@ import numpy as np
 from bs4 import BeautifulSoup
 import re
 
-DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/majors/main/draft_results.csv')
-ESPN_CONSTANTS_URL = ('https://raw.githubusercontent.com/dsung30/majors/main/espn_constants.csv')
+DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors/main/draft_results.csv')
+ESPN_CONSTANTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors/main/espn_constants.csv')
 
 
 def get_constants():
@@ -104,11 +105,10 @@ def main():
     header,body = get_leaderboard(url)
     draft_results = get_draft_results()
     full_standings,owner_standings = calc_score(draft_results,cutline, par, header,body)
-    print('\n\n************************* INDIVIDUAL SCORE *************************\n')
-    print(full_standings)
-    print('\n\n**************************** TEAM SCORE ****************************\n')
-    print(owner_standings)
-    print('\n\n')
+    st.subheader("Full Standings")
+    st.table(data=full_standings)
+    st.subheader("Team Standings")
+    st.table(data=owner_standings)
 
 if __name__ == '__main__':
     main()
