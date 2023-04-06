@@ -3,9 +3,6 @@ import requests
 import pandas as pd
 import numpy as np
 from bs4 import BeautifulSoup
-import warnings
-
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/majors/main/draft_results.csv')
 ESPN_CONSTANTS_URL = ('https://raw.githubusercontent.com/dsung30/majors/main/espn_constants.csv')
