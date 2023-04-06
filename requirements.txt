@@ -4,5 +4,4 @@ requests
 pandas
 numpy
 BeautifulSoup4
-re
 warnings
