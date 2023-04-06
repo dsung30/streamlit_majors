@@ -3,6 +3,6 @@ pandas
 requests
 pandas
 numpy
-bs4
+BeautifulSoup
 re
 warnings
