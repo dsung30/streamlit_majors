@@ -47,7 +47,7 @@ def calc_score(draft_results, cutline, par, header, body):
         if len(col_names[i].get_text()):
             col_dict[col_names[i].get_text()] = i
     
-    full_standings = pd.DataFrame(columns=['pos', 'player', 'owner', 'today', 'thru', 'score', 'adj_score', 'status'])
+    full_standings = pd.DataFrame(columns=['pos', 'player', 'owner', 'score', 'thru', 'today', 'adj_score', 'status'])
 
     for k in owner_standings.keys():
         owner_standings[k] = 0
@@ -64,7 +64,7 @@ def calc_score(draft_results, cutline, par, header, body):
             thru = '--'
             score = '---'
             adj_score = '---'
-            full_standings = full_standings.append({'pos': pos, 'player': player_name, 'owner': owner, 'today': today, 'thru': thru, 'score': score, 'adj_score':adj_score, 'status': status}, ignore_index=True)
+            full_standings = full_standings.append({'pos': pos, 'player': player_name, 'owner': owner, 'score': score, 'thru': thru, 'today': today, 'adj_score':adj_score, 'status': status}, ignore_index=True)
         else:
             player_name = td[col_dict['PLAYER']].get_text()
             if player_name in player_dict.keys():
@@ -95,7 +95,7 @@ def calc_score(draft_results, cutline, par, header, body):
                     thru = "F"
 
                 adj_score = "+" + str(adj_score) if adj_score > 0 else "E" if adj_score == 0 else adj_score
-                full_standings = full_standings.append({'pos': pos, 'player': player_name, 'owner': owner, 'today': today, 'thru': thru, 'score': score, 'adj_score':adj_score, 'status': status}, ignore_index=True)
+                full_standings = full_standings.append({'pos': pos, 'player': player_name, 'owner': owner, 'score': score, 'thru': thru, 'today': today, 'adj_score':adj_score, 'status': status}, ignore_index=True)
             else:
                 continue
     owner_standings_df = pd.DataFrame(list(owner_standings.items()))
