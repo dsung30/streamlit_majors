@@ -7,7 +7,11 @@ from bs4 import BeautifulSoup
 import re
 
 DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors/main/draft_results.csv')
-ESPN_CONSTANTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors/main/espn_constants.csv')
+
+# 2023 Masters Tournament
+ESPN_URL = ('https://www.espn.com/golf/leaderboard/_/tournamentId/401465508')
+PAR = 72
+CUTLINE = 1000
 
 
 def get_constants():
@@ -19,7 +23,7 @@ def get_constants():
     return url, folder, par, cutline
 
 def get_leaderboard(url):
-    result = requests.get(url)
+    result = requests.get(ESPN_URL)
     soup = BeautifulSoup(result.text, "html.parser")
     bodies = soup.find_all(class_="Table__TBODY")
     body = bodies[len(bodies)-1]
@@ -43,7 +47,7 @@ def calc_score(draft_results, cutline, par, header, body):
         if len(col_names[i].get_text()):
             col_dict[col_names[i].get_text()] = i
     
-    full_standings = pd.DataFrame(columns=['pos', 'player', 'status', 'owner', 'today', 'thru', 'score', 'adj_score'])
+    full_standings = pd.DataFrame(columns=['pos', 'player', 'owner', 'today', 'thru', 'score', 'adj_score', 'status'])
 
     for k in owner_standings.keys():
         owner_standings[k] = 0
@@ -60,7 +64,7 @@ def calc_score(draft_results, cutline, par, header, body):
             thru = '--'
             score = '---'
             adj_score = '---'
-            full_standings = full_standings.append({'pos': pos, 'player': player_name, 'status': status, 'owner': owner, 'today': today, 'thru': thru, 'score': score, 'adj_score':adj_score}, ignore_index=True)
+            full_standings = full_standings.append({'pos': pos, 'player': player_name, 'owner': owner, 'today': today, 'thru': thru, 'score': score, 'adj_score':adj_score, 'status': status}, ignore_index=True)
         else:
             player_name = td[col_dict['PLAYER']].get_text()
             if player_name in player_dict.keys():
@@ -91,7 +95,7 @@ def calc_score(draft_results, cutline, par, header, body):
                     thru = "F"
 
                 adj_score = "+" + str(adj_score) if adj_score > 0 else "E" if adj_score == 0 else adj_score
-                full_standings = full_standings.append({'pos': pos, 'player': player_name, 'status': status, 'owner': owner, 'today': today, 'thru': thru, 'score': score, 'adj_score':adj_score}, ignore_index=True)
+                full_standings = full_standings.append({'pos': pos, 'player': player_name, 'owner': owner, 'today': today, 'thru': thru, 'score': score, 'adj_score':adj_score, 'status': status}, ignore_index=True)
             else:
                 continue
     owner_standings_df = pd.DataFrame(list(owner_standings.items()))
@@ -101,10 +105,9 @@ def calc_score(draft_results, cutline, par, header, body):
     return full_standings, owner_standings_df
 
 def main():
-    url, folder, par, cutline = get_constants()
-    header,body = get_leaderboard(url)
+    header,body = get_leaderboard(ESPN_URL)
     draft_results = get_draft_results()
-    full_standings,owner_standings = calc_score(draft_results,cutline, par, header,body)
+    full_standings,owner_standings = calc_score(draft_results,CUTLINE, PAR, header,body)
     st.subheader("Full Standings")
     st.table(data=full_standings)
     st.subheader("Team Standings")
