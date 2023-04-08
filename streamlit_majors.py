@@ -11,7 +11,7 @@ DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors
 # 2023 Masters Tournament
 ESPN_URL = ('https://www.espn.com/golf/leaderboard/_/tournamentId/401465508')
 PAR = 72
-CUTLINE = 1000
+CUTLINE = 3
 
 
 def get_constants():
@@ -73,7 +73,10 @@ def calc_score(draft_results, cutline, par, header, body):
                 score = td[col_dict['SCORE']].get_text()
                 if score in ['CUT', 'WD']:
                     r1 = int(td[col_dict['R1']].get_text())
-                    r2 = int(td[col_dict['R2']].get_text())
+                    if player_name == 'Louis Oosthuizen':
+                        r2 = PAR
+                    else:
+                        r2 = int(td[col_dict['R2']].get_text())
                     adj_score = r1 + r2 - 2 * par
                     status = 'CUT'
                     score = "+" + str(adj_score) if adj_score > 0 else adj_score
@@ -102,6 +105,8 @@ def calc_score(draft_results, cutline, par, header, body):
     owner_standings_df.columns = ['owner', 'total']
     owner_standings_df = owner_standings_df.sort_values(by = 'total', ascending = True)
     owner_standings_df.index = list(range(1, len(owner_standings_df)+1))
+    owner_standings_df.style.format({'total': '{:+g}'})
+    print(owner_standings_df)
     return full_standings, owner_standings_df
 
 def main():
