@@ -11,7 +11,7 @@ DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors
 # 2023 PGA CHAMPIONSHIP
 ESPN_URL = ('https://www.espn.com/golf/leaderboard?tournamentId=401465523')
 PAR = 70
-CUTLINE = 100
+CUTLINE = 5
 
 
 def get_constants():
