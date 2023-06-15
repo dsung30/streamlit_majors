@@ -11,7 +11,29 @@ DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors
 # 2023 PGA CHAMPIONSHIP
 ESPN_URL = ('https://www.espn.com/golf/leaderboard?tournamentId=401465533')
 PAR = 70
-CUTLINE = 100
+
+def get_cutline(header, body):
+    cutline = 1000
+    cutline_regex = "[\+|\-]?\d+"
+    rows = body.find_all('tr')
+    tot_players = len(rows)
+    col_names = header.find_all('th')
+    col_dict = {}
+    for i in range(len(col_names)-1):
+        if len(col_names[i].get_text()):
+            col_dict[col_names[i].get_text()] = i
+
+    for i in range(tot_players):
+        row = rows[i]
+        td = row.find_all('td')
+        if len(td) == 1:
+            status = td[0].get_text()
+            r = re.search(cutline_regex, status)
+            cutline = int(r.group(0))
+        else:
+            continue
+    return cutline
+
 
 
 def get_constants():
@@ -74,10 +96,7 @@ def calc_score(draft_results, cutline, par, header, body):
                 score = td[col_dict['SCORE']].get_text()
                 if score in ['CUT', 'WD']:
                     r1 = int(td[col_dict['R1']].get_text())
-                    if player_name == 'Louis Oosthuizen':
-                        r2 = PAR
-                    else:
-                        r2 = int(td[col_dict['R2']].get_text())
+                    r2 = int(td[col_dict['R2']].get_text())
                     adj_score = r1 + r2 - 2 * par
                     status = 'CUT'
                     score = "+" + str(adj_score) if adj_score > 0 else adj_score
@@ -114,7 +133,8 @@ def calc_score(draft_results, cutline, par, header, body):
 def main():
     header,body = get_leaderboard(ESPN_URL)
     draft_results = get_draft_results()
-    full_standings,owner_standings = calc_score(draft_results,CUTLINE, PAR, header,body)
+    cutline = get_cutline(header, body)
+    full_standings,owner_standings = calc_score(draft_results,cutline, PAR, header,body)
     st.subheader("Full Standings")
     st.table(data=full_standings)
     st.subheader("Team Standings")
