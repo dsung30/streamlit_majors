@@ -9,9 +9,9 @@ import re
 DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors/main/draft_results.csv')
 
 # 2023 PGA CHAMPIONSHIP
-ESPN_URL = ('https://www.espn.com/golf/leaderboard?tournamentId=401465523')
+ESPN_URL = ('https://www.espn.com/golf/leaderboard?tournamentId=401465533')
 PAR = 70
-CUTLINE = 5
+CUTLINE = 100
 
 
 def get_constants():
