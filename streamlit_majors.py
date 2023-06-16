@@ -28,8 +28,11 @@ def get_cutline(header, body):
         td = row.find_all('td')
         if len(td) == 1:
             status = td[0].get_text()
-            r = re.search(cutline_regex, status)
-            cutline = int(r.group(0))
+            if "Projected Cut" in status:
+                continue
+            else:
+                r = re.search(cutline_regex, status)
+                cutline = int(r.group(0))
         else:
             continue
     return cutline
