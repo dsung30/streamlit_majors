@@ -9,8 +9,8 @@ import re
 DRAFT_RESULTS_URL = ('https://raw.githubusercontent.com/dsung30/streamlit_majors/main/draft_results.csv')
 
 # 2023 PGA CHAMPIONSHIP
-ESPN_URL = ('https://www.espn.com/golf/leaderboard?tournamentId=401465533')
-PAR = 70
+ESPN_URL = ('https://www.espn.com/golf/leaderboard/_/tournamentId/401465539')
+PAR = 71
 
 def get_cutline(header, body):
     cutline = 1000
@@ -36,8 +36,6 @@ def get_cutline(header, body):
         else:
             continue
     return cutline
-
-
 
 def get_constants():
     constants = pd.read_csv(ESPN_CONSTANTS_URL)
